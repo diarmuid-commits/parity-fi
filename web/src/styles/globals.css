@@ -91,3 +91,13 @@ body {
   animation: fadeIn 0.5s ease-out;
 }
 
+/* Override wallet adapter button text */
+.wallet-adapter-button-trigger {
+  background: linear-gradient(135deg, #9945FF 0%, #14F195 100%) !important;
+  font-weight: 600 !important;
+}
+
+.wallet-adapter-button:not([disabled]):hover {
+  background: linear-gradient(135deg, #8834ee 0%, #12d684 100%) !important;
+}
+

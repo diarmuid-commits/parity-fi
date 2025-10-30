@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Navbar from '@/components/Navbar';
+import WelcomeAnimation from '@/components/WelcomeAnimation';
 import { fetchRatio, RatioData } from '@/lib/oracle';
 
 const MARKETS = [
@@ -10,8 +11,22 @@ const MARKETS = [
   { id: 'stsol-sol', name: 'stSOL/SOL', description: 'Lido staked SOL' },
 ];
 
+// Mock recent activity
+const MOCK_ACTIVITIES = [
+  { user: 'Alice', amount: 5000, side: 'BULL', market: 'JitoSOL/SOL', time: '2m ago' },
+  { user: 'Bob', amount: 2500, side: 'BEAR', market: 'mSOL/SOL', time: '5m ago' },
+  { user: 'Charlie', amount: 10000, side: 'BULL', market: 'bSOL/SOL', time: '8m ago' },
+  { user: 'Diana', amount: 1500, side: 'BEAR', market: 'JitoSOL/SOL', time: '12m ago' },
+  { user: 'Eve', amount: 7500, side: 'BULL', market: 'stSOL/SOL', time: '15m ago' },
+  { user: 'Frank', amount: 3200, side: 'BEAR', market: 'mSOL/SOL', time: '18m ago' },
+  { user: 'Grace', amount: 4800, side: 'BULL', market: 'JitoSOL/SOL', time: '22m ago' },
+  { user: 'Henry', amount: 6000, side: 'BEAR', market: 'bSOL/SOL', time: '25m ago' },
+];
+
 export default function Markets() {
   const [ratios, setRatios] = useState<Record<string, RatioData>>({});
+  const [showWelcome, setShowWelcome] = useState(true);
+  const [currentActivityIndex, setCurrentActivityIndex] = useState(0);
 
   useEffect(() => {
     const updateRatios = async () => {
@@ -29,19 +44,75 @@ export default function Markets() {
     return () => clearInterval(interval);
   }, []);
 
+  // Rotate activity feed
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentActivityIndex((prev) => (prev + 1) % MOCK_ACTIVITIES.length);
+    }, 4000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const handleWelcomeComplete = () => {
+    setShowWelcome(false);
+  };
+
+  if (showWelcome) {
+    return <WelcomeAnimation onComplete={handleWelcomeComplete} />;
+  }
+
   return (
     <div className="min-h-screen">
       <Navbar />
       <div className="container mx-auto px-4 py-12">
-        <div className="text-center mb-12">
+        <div className="text-center mb-8">
           <h1 className="text-5xl font-bold mb-4">
             <span className="bg-gradient-to-r from-solana-purple to-solana-green bg-clip-text text-transparent">
               Active Markets
             </span>
           </h1>
-          <p className="text-xl text-gray-400">
+          <p className="text-xl text-gray-400 mb-6">
             Bet on LST/SOL peg deviations across multiple liquid staking tokens
           </p>
+
+          {/* 24h Stats */}
+          <div className="flex justify-center gap-8 mb-6">
+            <div className="text-center">
+              <div className="text-sm text-gray-500">24h Volume</div>
+              <div className="text-2xl font-bold text-solana-green">$2.4M</div>
+            </div>
+            <div className="text-center">
+              <div className="text-sm text-gray-500">Active Traders</div>
+              <div className="text-2xl font-bold text-solana-purple">847</div>
+            </div>
+            <div className="text-center">
+              <div className="text-sm text-gray-500">Total Markets</div>
+              <div className="text-2xl font-bold text-blue-400">4</div>
+            </div>
+          </div>
+
+          {/* Recent Activity */}
+          <div className="glass-card max-w-2xl mx-auto p-4 mb-8">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <span className="text-xl">⚡</span>
+                <div className="text-left">
+                  <div className="text-sm">
+                    <span className="font-bold text-white">{MOCK_ACTIVITIES[currentActivityIndex].user}</span>
+                    {' '}bet{' '}
+                    <span className="font-bold text-solana-green">${MOCK_ACTIVITIES[currentActivityIndex].amount.toLocaleString()}</span>
+                    {' '}
+                    <span className={`font-bold ${MOCK_ACTIVITIES[currentActivityIndex].side === 'BULL' ? 'text-green-400' : 'text-red-400'}`}>
+                      {MOCK_ACTIVITIES[currentActivityIndex].side}
+                    </span>
+                    {' on '}
+                    <span className="text-gray-300">{MOCK_ACTIVITIES[currentActivityIndex].market}</span>
+                  </div>
+                  <div className="text-xs text-gray-500">{MOCK_ACTIVITIES[currentActivityIndex].time}</div>
+                </div>
+              </div>
+              <div className="text-xs text-gray-500 animate-pulse">LIVE</div>
+            </div>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 max-w-5xl mx-auto">

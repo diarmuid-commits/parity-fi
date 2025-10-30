@@ -17,6 +17,15 @@ interface PoolState {
   bear: number;
 }
 
+// Mock recent bets for this market
+const generateMarketActivity = (marketName: string) => [
+  { user: 'Alice', amount: 3500, side: 'BULL', time: '1m ago' },
+  { user: 'Bob', amount: 1800, side: 'BEAR', time: '4m ago' },
+  { user: 'Charlie', amount: 5200, side: 'BULL', time: '7m ago' },
+  { user: 'Diana', amount: 2100, side: 'BEAR', time: '11m ago' },
+  { user: 'Eve', amount: 4700, side: 'BULL', time: '14m ago' },
+];
+
 export default function MarketDetail() {
   const router = useRouter();
   const { id } = router.query;
@@ -28,6 +37,7 @@ export default function MarketDetail() {
   const [mockUSDC, setMockUSDC] = useState<number>(10000);
   const [showTxModal, setShowTxModal] = useState(false);
   const [pendingBet, setPendingBet] = useState<{ side: 'bull' | 'bear'; amount: number } | null>(null);
+  const [activityIndex, setActivityIndex] = useState(0);
 
   // Per-market pool and position states
   const [pools, setPools] = useState<PoolState>({ bull: 50000, bear: 50000 });
@@ -73,6 +83,14 @@ export default function MarketDetail() {
     const interval = setInterval(updateRatio, 3000);
     return () => clearInterval(interval);
   }, [market]);
+
+  // Rotate activity
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setActivityIndex((prev) => (prev + 1) % 5);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
 
   const totalPool = pools.bull + pools.bear;
   const bullOdds = totalPool > 0 ? totalPool / pools.bull : 1;
@@ -163,8 +181,37 @@ export default function MarketDetail() {
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-4xl font-bold mb-2">{market.name}</h1>
-          <p className="text-gray-400">{market.description}</p>
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h1 className="text-4xl font-bold mb-2">{market.name}</h1>
+              <p className="text-gray-400">{market.description}</p>
+            </div>
+            <div className="text-right">
+              <div className="text-sm text-gray-500">24h Volume</div>
+              <div className="text-2xl font-bold text-solana-green">$847K</div>
+            </div>
+          </div>
+
+          {/* Recent Activity for this market */}
+          <div className="glass-card p-3 bg-gray-800/30">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <span className="text-lg">⚡</span>
+                <div className="text-sm">
+                  <span className="font-bold text-white">{generateMarketActivity(market.name)[activityIndex].user}</span>
+                  {' '}just bet{' '}
+                  <span className="font-bold text-solana-green">${generateMarketActivity(market.name)[activityIndex].amount.toLocaleString()}</span>
+                  {' '}
+                  <span className={`font-bold ${generateMarketActivity(market.name)[activityIndex].side === 'BULL' ? 'text-green-400' : 'text-red-400'}`}>
+                    {generateMarketActivity(market.name)[activityIndex].side}
+                  </span>
+                  {' · '}
+                  <span className="text-gray-500 text-xs">{generateMarketActivity(market.name)[activityIndex].time}</span>
+                </div>
+              </div>
+              <div className="text-xs text-gray-500 animate-pulse">LIVE</div>
+            </div>
+          </div>
         </div>
 
         <div className="grid lg:grid-cols-3 gap-6">
@@ -278,11 +325,90 @@ export default function MarketDetail() {
 
           {/* Right Column - Betting Interface */}
           <div className="space-y-6">
+            {/* Hedging Example Card */}
+            <div className="glass-card p-6 border-2 border-blue-500/30 bg-blue-500/5">
+              <div className="flex items-center gap-2 mb-3">
+                <span className="text-2xl">🛡️</span>
+                <h3 className="text-lg font-bold text-blue-400">Hedging Example</h3>
+              </div>
+              
+              <div className="space-y-3 text-sm">
+                <div className="bg-gray-800/50 rounded-lg p-3">
+                  <div className="text-gray-300 mb-2">
+                    <strong>Scenario:</strong> You have 100 {market.name.split('/')[0]} deposited as collateral in a lending protocol.
+                  </div>
+                  <div className="text-gray-400 text-xs">
+                    Current value: ~100 SOL ($10,000)
+                  </div>
+                </div>
+
+                <div className="border-l-2 border-yellow-500 pl-3">
+                  <div className="text-yellow-400 font-medium mb-1">⚠️ Risk</div>
+                  <div className="text-gray-400 text-xs">
+                    If {market.name.split('/')[0]} depegs by 5%, you could face liquidation or lose $500 in collateral value.
+                  </div>
+                </div>
+
+                <div className="border-l-2 border-green-500 pl-3">
+                  <div className="text-green-400 font-medium mb-1">✅ Solution</div>
+                  <div className="text-gray-400 text-xs">
+                    Buy BEAR position for $500. If depeg occurs, BEAR pays out ${(500 * bearOdds).toFixed(0)} ({bearOdds.toFixed(2)}×), offsetting your loss.
+                  </div>
+                </div>
+
+                <div className="bg-gray-800/30 rounded p-2 text-xs">
+                  <div className="flex justify-between mb-1">
+                    <span className="text-gray-500">Premium cost:</span>
+                    <span className="text-white">$500</span>
+                  </div>
+                  <div className="flex justify-between mb-1">
+                    <span className="text-gray-500">Potential payout:</span>
+                    <span className="text-green-400">${(500 * bearOdds).toFixed(0)}</span>
+                  </div>
+                  <div className="flex justify-between border-t border-gray-700 pt-1">
+                    <span className="text-gray-400 font-medium">Net if depeg:</span>
+                    <span className="text-green-400 font-bold">+${(500 * bearOdds - 500).toFixed(0)}</span>
+                  </div>
+                </div>
+
+                <div className="text-xs text-gray-500 italic">
+                  💡 This is how DeFi protocols can insure their LST holdings against depeg risk.
+                </div>
+              </div>
+            </div>
+
             {/* Balance Card */}
             <div className="glass-card p-6">
               <div className="text-sm text-gray-400 mb-1">Your Balance</div>
               <div className="text-3xl font-bold">${mockUSDC.toLocaleString()}</div>
               <div className="text-xs text-gray-500 mt-1">USDC (Demo)</div>
+            </div>
+
+            {/* Position Descriptions */}
+            <div className="glass-card p-6">
+              <h3 className="text-lg font-bold mb-4">Choose Your Side</h3>
+              
+              <div className="space-y-4">
+                <div className="border-l-4 border-green-500 pl-4 py-2">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="text-xl">🐂</span>
+                    <span className="font-bold text-green-400">BULL</span>
+                  </div>
+                  <p className="text-sm text-gray-400 leading-relaxed">
+                    Bet the peg holds. Sell protection to hedgers and earn consistent premiums as the likely outcome materializes.
+                  </p>
+                </div>
+
+                <div className="border-l-4 border-red-500 pl-4 py-2">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="text-xl">🐻</span>
+                    <span className="font-bold text-red-400">BEAR</span>
+                  </div>
+                  <p className="text-sm text-gray-400 leading-relaxed">
+                    Hedge against peg deviation or speculate on drift events. Pay a premium for protection with amplified upside when deviation occurs.
+                  </p>
+                </div>
+              </div>
             </div>
 
             {/* Bet Input */}
