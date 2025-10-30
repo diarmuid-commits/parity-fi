@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Clear Parity Data</title>
+  <style>
+    body {
+      background: #000;
+      color: #fff;
+      font-family: system-ui;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .container {
+      text-align: center;
+      padding: 40px;
+      background: #1a1a1a;
+      border-radius: 12px;
+      border: 2px solid #14F195;
+    }
+    button {
+      background: linear-gradient(135deg, #9945FF 0%, #14F195 100%);
+      border: none;
+      color: white;
+      padding: 16px 32px;
+      font-size: 18px;
+      font-weight: bold;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+    button:hover {
+      opacity: 0.8;
+    }
+    .success {
+      color: #14F195;
+      margin-top: 20px;
+      font-size: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🧹 Clear All Parity Data</h1>
+    <p>This will delete all positions, pools, and balances</p>
+    <button onclick="clearData()">CLEAR EVERYTHING</button>
+    <div id="result"></div>
+  </div>
+  <script>
+    function clearData() {
+      // Clear all localStorage
+      localStorage.clear();
+      
+      // Show success message
+      document.getElementById('result').innerHTML = 
+        '<div class="success">✅ ALL DATA CLEARED!<br>Close this and refresh your app</div>';
+      
+      console.log('✅ All localStorage cleared');
+    }
+  </script>
+</body>
+</html>

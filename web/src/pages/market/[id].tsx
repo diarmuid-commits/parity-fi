@@ -465,19 +465,19 @@ export default function MarketDetail() {
               {betAmount && parseFloat(betAmount) > 0 && (
                 <div className="bg-gradient-to-r from-green-500/10 to-blue-500/10 border border-green-500/30 rounded-lg p-4 mb-4">
                   <div className="text-center">
-                    <div className="text-xs text-gray-400 mb-1">Potential Winnings</div>
+                    <div className="text-xs text-gray-400 mb-1">💰 Instant Win Calculator</div>
                     <div className="grid grid-cols-2 gap-4">
                       <div>
                         <div className="text-lg font-bold text-green-400">
-                          ${(parseFloat(betAmount) * bullOdds).toFixed(0)}
+                          +${(parseFloat(betAmount) * bullOdds - parseFloat(betAmount)).toFixed(0)}
                         </div>
-                        <div className="text-xs text-gray-500">if BULL wins</div>
+                        <div className="text-xs text-gray-500">BULL profit ({bullOdds.toFixed(2)}×)</div>
                       </div>
                       <div>
                         <div className="text-lg font-bold text-red-400">
-                          ${(parseFloat(betAmount) * bearOdds).toFixed(0)}
+                          +${(parseFloat(betAmount) * bearOdds - parseFloat(betAmount)).toFixed(0)}
                         </div>
-                        <div className="text-xs text-gray-500">if BEAR wins</div>
+                        <div className="text-xs text-gray-500">BEAR profit ({bearOdds.toFixed(2)}×)</div>
                       </div>
                     </div>
                   </div>
