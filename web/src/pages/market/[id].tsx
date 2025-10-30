@@ -171,8 +171,17 @@ export default function MarketDetail() {
     // If BEAR wins: user gets bearStake * bearOdds, loses bullStake
     const bearPnLIfWins = (bearStake * bearOdds) - bearStake - bullStake;
 
-    // Expected value (assuming 50/50 probability for simplicity)
-    const expectedValue = (bullPnLIfWins + bearPnLIfWins) / 2;
+    // Calculate implied probabilities from odds (proper EV calculation)
+    const bullImpliedProb = 1 / bullOdds;
+    const bearImpliedProb = 1 / bearOdds;
+    const totalProb = bullImpliedProb + bearImpliedProb;
+    
+    // Normalize probabilities to sum to 1
+    const bullProb = bullImpliedProb / totalProb;
+    const bearProb = bearImpliedProb / totalProb;
+    
+    // Expected value weighted by market-implied probability
+    const expectedValue = (bullProb * bullPnLIfWins) + (bearProb * bearPnLIfWins);
 
     return { bullPnLIfWins, bearPnLIfWins, expectedValue };
   };

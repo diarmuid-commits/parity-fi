@@ -49,7 +49,18 @@ export default function Portfolio() {
             // Calculate conditional PnL
             const bullPnLIfWins = (position.bull * bullOdds) - position.bull - position.bear;
             const bearPnLIfWins = (position.bear * bearOdds) - position.bear - position.bull;
-            const expectedValue = (bullPnLIfWins + bearPnLIfWins) / 2;
+            
+            // Calculate implied probabilities from odds (accounting for overround)
+            const bullImpliedProb = 1 / bullOdds;
+            const bearImpliedProb = 1 / bearOdds;
+            const totalProb = bullImpliedProb + bearImpliedProb;
+            
+            // Normalize probabilities to sum to 1
+            const bullProb = bullImpliedProb / totalProb;
+            const bearProb = bearImpliedProb / totalProb;
+            
+            // Expected value weighted by probability
+            const expectedValue = (bullProb * bullPnLIfWins) + (bearProb * bearPnLIfWins);
 
             allPositions.push({
               marketId,
