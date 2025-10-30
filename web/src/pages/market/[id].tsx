@@ -53,13 +53,14 @@ export default function MarketDetail() {
       if (storedPools) {
         setPools(JSON.parse(storedPools));
       } else {
-        // Initialize with realistic values per market
-        // BULL pool larger (safer bet) = lower odds (1.5-1.7×)
-        // BEAR pool smaller (riskier bet) = higher odds (2.2-2.8×)
+        // Initialize with REALISTIC depeg economics
+        // Peg holding is 95%+ likely → BULL pool dominates (90% of total)
+        // Depeg is rare (<5% chance) → BEAR pool tiny (10% of total)
         const baseValue = 50000 + (market?.index || 0) * 10000;
+        const totalLiquidity = baseValue * 5; // Much larger total pool
         const initialPools = {
-          bull: baseValue + 15000 + Math.random() * 10000,  // 65K-75K
-          bear: baseValue - 10000 + Math.random() * 8000,    // 40K-48K
+          bull: totalLiquidity * 0.9 + Math.random() * 10000,  // ~90% in BULL (225K-240K)
+          bear: totalLiquidity * 0.1 + Math.random() * 5000,   // ~10% in BEAR (25K-30K)
         };
         setPools(initialPools);
         localStorage.setItem(`mockPools_${marketId}`, JSON.stringify(initialPools));
