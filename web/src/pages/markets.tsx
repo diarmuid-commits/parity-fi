@@ -28,15 +28,12 @@ export default function Markets() {
   const [showWelcome, setShowWelcome] = useState(true);
   const [currentActivityIndex, setCurrentActivityIndex] = useState(0);
 
-  // 🚨 NUCLEAR OPTION: Clear all data on load (REMOVE THIS AFTER DEMO!)
+  // 🚨 NUCLEAR OPTION: Clear all data on EVERY page load (REMOVE THIS AFTER DEMO!)
   useEffect(() => {
-    const shouldClear = !sessionStorage.getItem('data_cleared_v2');
-    if (shouldClear) {
-      console.log('🧹 Clearing all demo data...');
-      localStorage.clear();
-      sessionStorage.setItem('data_cleared_v2', 'true');
-      console.log('✅ All data cleared! Fresh start.');
-    }
+    console.log('🧹 Clearing all demo data on refresh...');
+    localStorage.clear();
+    sessionStorage.clear();
+    console.log('✅ All data cleared! Fresh start on every refresh.');
   }, []);
 
   useEffect(() => {
