@@ -28,6 +28,17 @@ export default function Markets() {
   const [showWelcome, setShowWelcome] = useState(true);
   const [currentActivityIndex, setCurrentActivityIndex] = useState(0);
 
+  // 🚨 NUCLEAR OPTION: Clear all data on load (REMOVE THIS AFTER DEMO!)
+  useEffect(() => {
+    const shouldClear = !sessionStorage.getItem('data_cleared_v2');
+    if (shouldClear) {
+      console.log('🧹 Clearing all demo data...');
+      localStorage.clear();
+      sessionStorage.setItem('data_cleared_v2', 'true');
+      console.log('✅ All data cleared! Fresh start.');
+    }
+  }, []);
+
   useEffect(() => {
     const updateRatios = async () => {
       const newRatios: Record<string, RatioData> = {};
