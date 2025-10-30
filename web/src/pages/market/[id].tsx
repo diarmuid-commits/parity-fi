@@ -137,7 +137,19 @@ export default function MarketDetail() {
     setPosition(newPosition);
     localStorage.setItem(`mockPositions_${marketId}`, JSON.stringify(newPosition));
 
-    toast.success(`Successfully placed ${side.toUpperCase()} bet!`);
+    toast.success(
+      `🎉 ${side.toUpperCase()} Bet Placed! You could win $${(amount * (side === 'bull' ? bullOdds : bearOdds) - amount).toFixed(0)} profit!`,
+      {
+        duration: 4000,
+        style: {
+          background: '#1a1a1a',
+          color: '#fff',
+          border: '1px solid #14F195',
+          padding: '16px',
+          fontSize: '14px',
+        },
+      }
+    );
     setPendingBet(null);
   };
 
@@ -437,18 +449,51 @@ export default function MarketDetail() {
                 </div>
               </div>
 
+              {/* Win Preview */}
+              {betAmount && parseFloat(betAmount) > 0 && (
+                <div className="bg-gradient-to-r from-green-500/10 to-blue-500/10 border border-green-500/30 rounded-lg p-4 mb-4">
+                  <div className="text-center">
+                    <div className="text-xs text-gray-400 mb-1">Potential Winnings</div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <div className="text-lg font-bold text-green-400">
+                          ${(parseFloat(betAmount) * bullOdds).toFixed(0)}
+                        </div>
+                        <div className="text-xs text-gray-500">if BULL wins</div>
+                      </div>
+                      <div>
+                        <div className="text-lg font-bold text-red-400">
+                          ${(parseFloat(betAmount) * bearOdds).toFixed(0)}
+                        </div>
+                        <div className="text-xs text-gray-500">if BEAR wins</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               <div className="space-y-3">
                 <button
                   onClick={() => handleBet('bull')}
                   className="bet-button w-full bg-green-600 hover:bg-green-500 text-white font-bold py-4 rounded-lg transition-all"
                 >
                   🐂 BET BULL {bullOdds.toFixed(2)}×
+                  {betAmount && parseFloat(betAmount) > 0 && (
+                    <span className="block text-sm font-normal mt-1">
+                      Win ${(parseFloat(betAmount) * bullOdds - parseFloat(betAmount)).toFixed(0)} profit
+                    </span>
+                  )}
                 </button>
                 <button
                   onClick={() => handleBet('bear')}
                   className="bet-button w-full bg-red-600 hover:bg-red-500 text-white font-bold py-4 rounded-lg transition-all"
                 >
                   🐻 BET BEAR {bearOdds.toFixed(2)}×
+                  {betAmount && parseFloat(betAmount) > 0 && (
+                    <span className="block text-sm font-normal mt-1">
+                      Win ${(parseFloat(betAmount) * bearOdds - parseFloat(betAmount)).toFixed(0)} profit
+                    </span>
+                  )}
                 </button>
               </div>
             </div>
