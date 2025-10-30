@@ -1,10 +1,25 @@
 import Link from 'next/link';
-import dynamic from 'next/dynamic';
 
-const WalletMultiButtonDynamic = dynamic(
-  async () => (await import('@solana/wallet-adapter-react-ui')).WalletMultiButton,
-  { ssr: false }
-);
+// Fake wallet button for demo - always shows as "connected"
+function FakeWalletButton() {
+  const mockAddress = '7xKXp2...vB9mZ'; // Realistic Solana address format
+
+  return (
+    <button
+      className="px-4 py-2 rounded-lg font-semibold text-sm transition-all cursor-pointer"
+      style={{
+        background: 'linear-gradient(135deg, #512DA8 0%, #1976D2 100%)',
+        color: 'white',
+        border: 'none',
+      }}
+    >
+      <span className="flex items-center gap-2">
+        <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+        {mockAddress}
+      </span>
+    </button>
+  );
+}
 
 export default function Navbar() {
   return (
@@ -53,7 +68,7 @@ export default function Navbar() {
               </Link>
             </div>
           </div>
-          <WalletMultiButtonDynamic>Connect Wallet</WalletMultiButtonDynamic>
+          <FakeWalletButton />
         </div>
       </div>
     </nav>
