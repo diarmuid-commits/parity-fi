@@ -53,11 +53,13 @@ export default function MarketDetail() {
       if (storedPools) {
         setPools(JSON.parse(storedPools));
       } else {
-        // Initialize with unique values per market
+        // Initialize with realistic values per market
+        // BULL pool larger (safer bet) = lower odds (1.5-1.7×)
+        // BEAR pool smaller (riskier bet) = higher odds (2.2-2.8×)
         const baseValue = 50000 + (market?.index || 0) * 10000;
         const initialPools = {
-          bull: baseValue + Math.random() * 20000,
-          bear: baseValue + Math.random() * 20000,
+          bull: baseValue + 15000 + Math.random() * 10000,  // 65K-75K
+          bear: baseValue - 10000 + Math.random() * 8000,    // 40K-48K
         };
         setPools(initialPools);
         localStorage.setItem(`mockPools_${marketId}`, JSON.stringify(initialPools));
