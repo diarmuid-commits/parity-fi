@@ -1,0 +1,11 @@
+{
+  "version": "0.1.0",
+  "name": "parity",
+  "instructions": [],
+  "accounts": [],
+  "types": [],
+  "metadata": {
+    "address": "YOUR_PROGRAM_ID_HERE"
+  }
+}
+
