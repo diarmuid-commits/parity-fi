@@ -11,16 +11,16 @@ const MARKETS = [
   { id: 'stsol-sol', name: 'stSOL/SOL', description: 'Lido staked SOL' },
 ];
 
-// Mock recent activity
+// Mock recent activity with realistic Solana wallet addresses
 const MOCK_ACTIVITIES = [
-  { user: 'Alice', amount: 5000, side: 'BULL', market: 'JitoSOL/SOL', time: '2m ago' },
-  { user: 'Bob', amount: 2500, side: 'BEAR', market: 'mSOL/SOL', time: '5m ago' },
-  { user: 'Charlie', amount: 10000, side: 'BULL', market: 'bSOL/SOL', time: '8m ago' },
-  { user: 'Diana', amount: 1500, side: 'BEAR', market: 'JitoSOL/SOL', time: '12m ago' },
-  { user: 'Eve', amount: 7500, side: 'BULL', market: 'stSOL/SOL', time: '15m ago' },
-  { user: 'Frank', amount: 3200, side: 'BEAR', market: 'mSOL/SOL', time: '18m ago' },
-  { user: 'Grace', amount: 4800, side: 'BULL', market: 'JitoSOL/SOL', time: '22m ago' },
-  { user: 'Henry', amount: 6000, side: 'BEAR', market: 'bSOL/SOL', time: '25m ago' },
+  { user: '7xKL9...mPq8', amount: 5000, side: 'BULL', market: 'JitoSOL/SOL', time: '2m ago' },
+  { user: '3mPq8...kD4j', amount: 2500, side: 'BEAR', market: 'mSOL/SOL', time: '5m ago' },
+  { user: '9nF3x...vB2w', amount: 10000, side: 'BULL', market: 'bSOL/SOL', time: '8m ago' },
+  { user: '5jH8k...pL9z', amount: 1500, side: 'BEAR', market: 'JitoSOL/SOL', time: '12m ago' },
+  { user: 'AeK4m...wR3q', amount: 7500, side: 'BULL', market: 'stSOL/SOL', time: '15m ago' },
+  { user: '2vT6n...xQ7p', amount: 3200, side: 'BEAR', market: 'mSOL/SOL', time: '18m ago' },
+  { user: '8pW2z...sN5v', amount: 4800, side: 'BULL', market: 'JitoSOL/SOL', time: '22m ago' },
+  { user: '4hL9m...cK8t', amount: 6000, side: 'BEAR', market: 'bSOL/SOL', time: '25m ago' },
 ];
 
 export default function Markets() {

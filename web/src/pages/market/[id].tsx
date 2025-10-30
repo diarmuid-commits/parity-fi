@@ -17,13 +17,13 @@ interface PoolState {
   bear: number;
 }
 
-// Mock recent bets for this market
+// Mock recent bets for this market with realistic Solana addresses
 const generateMarketActivity = (marketName: string) => [
-  { user: 'Alice', amount: 3500, side: 'BULL', time: '1m ago' },
-  { user: 'Bob', amount: 1800, side: 'BEAR', time: '4m ago' },
-  { user: 'Charlie', amount: 5200, side: 'BULL', time: '7m ago' },
-  { user: 'Diana', amount: 2100, side: 'BEAR', time: '11m ago' },
-  { user: 'Eve', amount: 4700, side: 'BULL', time: '14m ago' },
+  { user: '6rX3k...mW9p', amount: 3500, side: 'BULL', time: '1m ago' },
+  { user: 'BnQ7v...hF4x', amount: 1800, side: 'BEAR', time: '4m ago' },
+  { user: '5wP8z...jK2n', amount: 5200, side: 'BULL', time: '7m ago' },
+  { user: '9mL4t...pV6r', amount: 2100, side: 'BEAR', time: '11m ago' },
+  { user: 'CqR2h...sT8w', amount: 4700, side: 'BULL', time: '14m ago' },
 ];
 
 export default function MarketDetail() {
